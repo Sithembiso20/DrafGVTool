@@ -70,6 +70,7 @@ namespace GeneralValuationSubs.Controllers
                     drafts.Add(new Draft
                     {
                         QueryId = (int)dr["QueryId"],
+                        QUERY_No = dr["QUERY_No"].ToString(),
                         PremiseId = dr["Premise ID"].ToString(),
                         PropertyDescription = dr["PROPERTY_DESC"].ToString(),
                         TownshipDescription = dr["Town Name Description"].ToString(),
@@ -256,6 +257,7 @@ namespace GeneralValuationSubs.Controllers
                     drafts.Add(new Draft
                     {
                         QueryId = (int)dr["QueryId"],
+                        QUERY_No = dr["QUERY_No"].ToString(),
                         PremiseId = dr["Premise ID"].ToString(),
                         PropertyDescription = dr["PROPERTY_DESC"].ToString(),
                         TownshipDescription = dr["Town Name Description"].ToString(),
@@ -276,8 +278,7 @@ namespace GeneralValuationSubs.Controllers
                         Dept_Dir = dr["Dept_Dir"].ToString(),
                         Snr_Manager = dr["Snr_Manager"].ToString(),
                         Area_Manager = dr["Area_Manager"].ToString(),
-                        Candidate_DC = dr["Candidate_DC"].ToString(),
-                        QUERY_No = dr["QUERY_No"].ToString()
+                        Candidate_DC = dr["Candidate_DC"].ToString()
                         //Date = (DateTime)dr["Date"],
 
                     });

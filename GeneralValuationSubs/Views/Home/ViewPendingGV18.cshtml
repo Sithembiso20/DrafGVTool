@@ -154,11 +154,21 @@
                                             <label for="ObjectionOutcomeExtent">Extent</label>
                                             <input class="form-control" id="Extent" maxlength="10" name="LISExtent" Value="@item.LIS_RV_EXTENT" disabled />
                                         </div>    
-                                        
-
-                                   <div class="my-3"></div>
                                          
                                    </div>
+
+                                    <div class="row my-3">
+                                        <div class="col-md-4 form-group">
+                                        </div>
+
+                                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                                        </div>
+
+                                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                                            <label for="datepicker">With Effect Date</label>
+                                            <input class="form-control" id="datepicker" name="LIS_RV_WEF_DATE" Value="@item.LIS_RV_WEF_DATE" disabled />
+                                        </div>
+                                    </div>
 
                                     @if (@item.ObjectionOutcomeCategory == "Multiple Purpose" || @item.ObjectionOutcomeCategory == "Multiple Purpose Residential" || @item.LIS_RV_CATEGORY == "Multiple Purpose")
                                     {

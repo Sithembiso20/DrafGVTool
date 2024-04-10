@@ -18,9 +18,10 @@
 
         public string? LIS_RV_CATEGORY { get; set; } 
         public string? LIS_RV_EXTENT { get; set; }
+        public string? LIS_RV_WEF_DATE { get; set; } 
 
         public string? CATDescription { get; set; }
-
+         
         public string? Status { get; set; }
 
         public string? Property_Description { get; set; }

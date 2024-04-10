@@ -48,7 +48,10 @@
     <thead>
         <tr>
             <th>
-                Premise Id
+                Query ID
+            </th>
+            <th>
+                Premise ID
             </th>
             <th> 
                 Township Desc
@@ -82,6 +85,9 @@
                 @foreach (var item in ViewBag.UserDataList)
                 {
                 <tr>
+                    <td>
+                            @item.QUERY_No
+                    </td>
                     <td>
                             @item.PremiseId
                     </td>

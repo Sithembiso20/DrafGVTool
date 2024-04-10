@@ -205,6 +205,20 @@
 
                                                 </div>
 
+                                    @section Scripts
+                                {
+                                <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                                <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+                                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                                <script>
+                                    $(function () {
+                                        $("#datepicker").datepicker({
+                                            dateFormat: 'yy-mm-dd'
+                                        });
+                                    });
+                                </script>
+                            }
+
                                               <div class="row my-3">
                                                     <div class="col-md-4 form-group">
                                                         <label for="TownNameDesc">Town Name Description</label>
@@ -219,6 +233,22 @@
                                                     <div class="col-md-4 form-group mt-3 mt-md-0">
                                                         <label for="ObjectionOutcomeExtent">Extent</label>
                                                         <input class="form-control" id="Extent" maxlength="10" name="LISExtent" required />
+                                                    </div>
+                                              </div>
+
+
+                                              <div class="row my-3">
+                                                    <div class="col-md-4 form-group">
+                                                      
+                                                    </div>
+
+                                                    <div class="col-md-4 form-group mt-3 mt-md-0">
+
+                                                    </div>
+
+                                                    <div class="col-md-4 form-group mt-3 mt-md-0">
+                                                        <label for="datepicker">With Effect Date</label>
+                                                        <input class="form-control" id="datepicker" name="LIS_RV_WEF_DATE" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                                                     </div>
                                               </div>
 

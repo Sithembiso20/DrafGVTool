@@ -2736,7 +2736,7 @@ namespace GeneralValuationSubs.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateLIS18(string? GV18ID, string? PremiseId, string? Property_Description, string? LISMarketValue,string? MarketValue1,string? MarketValue2,string? MarketValue3, string? LISCATDescription, string? CATDescription1,string? CATDescription2,string? CATDescription3,string? LISExtent, string? Extent1, string? Extent2, string? Extent3, string? Comment, string? userName, List<IFormFile> files)
+        public async Task<IActionResult> UpdateLIS18(string? GV18ID, string? PremiseId, string? Property_Description, string? LISMarketValue,string? MarketValue1,string? MarketValue2,string? MarketValue3, string? LISCATDescription, string? LIS_RV_WEF_DATE, string? CATDescription1,string? CATDescription2,string? CATDescription3,string? LISExtent, string? Extent1, string? Extent2, string? Extent3, string? Comment, string? userName, List<IFormFile> files)
         {                                                                                                                                                               
             var userID = TempData["currentUser"];                                                                                                                    
             TempData.Keep("currentUser");                                                                                                                            
@@ -2758,7 +2758,7 @@ namespace GeneralValuationSubs.Controllers
                 //string fileNameAttachValue = (files != null && files.FileName != null) ? Path.GetFileName(files.FileName) : null;
 
                 com.CommandText = "UPDATE [UpdatedGVTool].[dbo].[GV18_RV_OUTSTANDING] SET [LIS_RV_MARKET_VALUE] = '" + LISMarketValue + "'," + " [MarketValue1] = '" + MarketValue1 + "'," + " [MarketValue2] = '" + MarketValue2 + "', [MarketValue3] = '" + MarketValue3 + "', [Comment] = '" + Comment + "', Activity_Date = getdate()," +
-                                  "[LIS_RV_CATEGORY] = '" + LISCATDescription + "', [CATDescription1] = '" + CATDescription1 + "'," + " [CATDescription2] = '" + CATDescription2 + "', " + " [CATDescription3] = '" + CATDescription3 + "', [LIS_RV_EXTENT] = '" + LISExtent + "', [Extent1] = '" + Extent1 + "', [Extent2] = '" + Extent2 + "', [Extent3] = '" + Extent3 + "', Status = (SELECT Status_Description FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 2) WHERE GV18ID = '" + GV18ID + "'";
+                                  "[LIS_RV_CATEGORY] = '" + LISCATDescription + "', [LIS_RV_WEF_DATE] = '" + LIS_RV_WEF_DATE + "' , [CATDescription1] = '" + CATDescription1 + "'," + " [CATDescription2] = '" + CATDescription2 + "', " + " [CATDescription3] = '" + CATDescription3 + "', [LIS_RV_EXTENT] = '" + LISExtent + "', [Extent1] = '" + Extent1 + "', [Extent2] = '" + Extent2 + "', [Extent3] = '" + Extent3 + "', Status = (SELECT Status_Description FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 2) WHERE GV18ID = '" + GV18ID + "'";
 
                 dr = com.ExecuteReader();
                 while (dr.Read())
@@ -2902,6 +2902,7 @@ namespace GeneralValuationSubs.Controllers
                         LIS_RV_MARKET_VALUE = dr["LIS_RV_MARKET_VALUE"].ToString(),
                         LIS_RV_CATEGORY = dr["LIS_RV_CATEGORY"].ToString(),
                         LIS_RV_EXTENT = dr["LIS_RV_EXTENT"].ToString(),
+                        LIS_RV_WEF_DATE = dr["LIS_RV_WEF_DATE"].ToString(),
                         Property_Description = dr["PROPERTY_DESCRIPTION"].ToString(),
                         Indicator = dr["Indicator"].ToString()
                         //Date = (DateTime)dr["Date"],
