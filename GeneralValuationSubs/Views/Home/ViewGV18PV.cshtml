@@ -42,7 +42,7 @@
 
     <h2 style="text-align: center;">General Valuation 2018</h2>
 
-    <form asp-controller="Home" asp-action="UpdateLIS18" method="POST" enctype="multipart/form-data" >
+    <form asp-controller="Home" asp-action="UpdateLIS18PV" method="POST" enctype="multipart/form-data" >
 
             <input hidden type="text" name="userName" value="@currentUserFirstname @currentUserSurname"/>
             
@@ -248,7 +248,7 @@
 
                                                     <div class="col-md-4 form-group mt-3 mt-md-0">
                                                         <label for="datepicker">With Effect Date <span style="font-size: 12px">(YYYY-MM-DD)</span></label>
-                                                        <input class="form-control" id="datepicker" name="LIS_RV_WEF_DATE" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                                                        <input class="form-control" id="datepicker" name="LIS_RV_WEF_DATE" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly/>
                                                     </div>
                                               </div>
 

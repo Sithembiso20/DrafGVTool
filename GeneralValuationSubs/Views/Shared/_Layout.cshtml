@@ -273,7 +273,7 @@
                                             @if (@role.ToString() == "VALUATION ADMIN")
                                             {
                                                 <li class="nav-item">
-                                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GV18ValuationAdmin">GV18 Valuation Board Appeal</a>
+                                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GV18ValuationAdmin">GV18 RV Valuation Board Appeal</a>
                                                 </li>
                                             }
                                         }
@@ -282,7 +282,26 @@
                                             @if (@role.ToString() == "VALUATION ADMIN SUPERVISER")
                                             {
                                                 <li class="nav-item">
-                                                    <a asp-controller="Home" asp-action="ApprovalListGV18" class=" text-dark">GV18 Valuation Board Appeal Approval</a>
+                                                    <a asp-controller="Home" asp-action="ApprovalListGV18" class=" text-dark">GV18 RV Valuation Board Appeal Approval</a>
+                                                </li>
+                                            }
+                                        }
+
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "VALUATION ADMIN")
+                                            {
+                                                <li class="nav-item">
+                                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GV18ValuationAdminPV">GV18 PV Valuation Board Appeal</a>
+                                                </li>
+                                            }
+                                        }
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "VALUATION ADMIN SUPERVISER")
+                                            {
+                                                <li class="nav-item">
+                                                    <a asp-controller="Home" asp-action="ApprovalListGV18PV" class=" text-dark">GV18 PV Valuation Board Appeal Approval</a>
                                                 </li>
                                             }
                                         }
