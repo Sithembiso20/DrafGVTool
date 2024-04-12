@@ -3514,7 +3514,7 @@ namespace GeneralValuationSubs.Controllers
                                       "SET [Status] = (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 4)," +
                                       "[approverComment] = '" + approverComment + "' WHERE GV18ID = '" + GV18ID + "'";
 
-                    dr = com.ExecuteReader();
+                    dr = com.ExecuteReader(); 
                     while (dr.Read())
                     {
                         GV18s.Add(new GV18
