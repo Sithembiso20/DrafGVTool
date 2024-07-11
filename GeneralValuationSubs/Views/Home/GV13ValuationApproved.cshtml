@@ -62,14 +62,10 @@
 
                     <th>
                         Objection Outcome Extent
-                    </th>
-
+                    </th>     
+                    
                     <th>
-                        Indicator
-                    </th>
-
-                    <th>
-                        --------
+                        Status
                     </th>
 
                     @*<th>
@@ -106,13 +102,8 @@
                             </td>
 
                             <td>
-                                @item.Indicator
+                                @item.Status
                             </td>
-
-                            <td>
-                                <a class="btn" style="background-color: #E6B000;" asp-controller="Home" asp-action="ViewGV13" asp-route-ID="@item.GV13ID">View</a>
-                            </td>
-
                         </tr>
 
                     }

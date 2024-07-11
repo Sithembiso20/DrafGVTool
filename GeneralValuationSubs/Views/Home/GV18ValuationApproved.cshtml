@@ -33,7 +33,7 @@
         }
     </style>
 
-    <h2 style="text-align: center;">General Valuation 2013</h2>
+    <h2 style="text-align: center;">General Valuation 2018</h2>
 
     <form asp-controller="Home" asp-action="AllocatingTask" method="POST">
 
@@ -63,13 +63,12 @@
                     <th>
                         Objection Outcome Extent
                     </th>
-
                     <th>
                         Indicator
                     </th>
 
                     <th>
-                        --------
+                        Status
                     </th>
 
                     @*<th>
@@ -78,9 +77,9 @@
                 </tr>
             </thead>
             <tbody>
-                @if (ViewBag.UserDataList != null)
+                @if (ViewBag.UserDataList18 != null)
                 {
-                    @foreach (var item in ViewBag.UserDataList)
+                    @foreach (var item in ViewBag.UserDataList18)
                     {
                         <tr>
                             <td>
@@ -110,7 +109,7 @@
                             </td>
 
                             <td>
-                                <a class="btn" style="background-color: #E6B000;" asp-controller="Home" asp-action="ViewGV13" asp-route-ID="@item.GV13ID">View</a>
+                                @item.Status
                             </td>
 
                         </tr>

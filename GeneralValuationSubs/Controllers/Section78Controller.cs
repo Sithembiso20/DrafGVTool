@@ -8,6 +8,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json.Linq;
 using System.Data;
+using System.IO.Compression;
 
 namespace GeneralValuationSubs.Controllers
 {
@@ -61,8 +62,8 @@ namespace GeneralValuationSubs.Controllers
             {
                 con.Open();
                 com.Connection = con;
-                com.CommandText = "SELECT * FROM [UpdatedGVTool].[dbo].[NotValuedSection78]" +
-                                 "WHERE (Dept_Dir LIKE '%" + userName + "%' OR Snr_Manager LIKE '%" + userName + "%' OR Area_Manager LIKE '%" + userName + "%' OR Candidate_DC LIKE '%" + userName + "%') AND Status IN (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID IN (4, 5))";
+                com.CommandText = "SELECT DATEDIFF(DAY,Start_Date, GETDATE()) AS Date_Diff, * FROM [UpdatedGVTool].[dbo].[NotValuedSection78] " +
+                                 "WHERE (Dept_Dir LIKE '%" + userName + "%' OR Snr_Manager LIKE '%" + userName + "%' OR Area_Manager LIKE '%" + userName + "%' OR Candidate_DC LIKE '%" + userName + "%') AND Status IN (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID IN (5, 4))";
 
                 dr = com.ExecuteReader();
                 while (dr.Read())
@@ -94,6 +95,7 @@ namespace GeneralValuationSubs.Controllers
                         Area_Manager = dr["Area_Manager"].ToString(),
                         Candidate_DC = dr["Candidate_DC"].ToString(),
                         Start_Date = (DateTime)dr["Start_Date"],
+                        DateDiff = (int)dr["Date_Diff"]
                         //Date = (DateTime)dr["Date"],
 
                     });
@@ -248,8 +250,9 @@ namespace GeneralValuationSubs.Controllers
             {
                 con.Open();
                 com.Connection = con;
-                com.CommandText = "SELECT * FROM [UpdatedGVTool].[dbo].[NotValuedSection78]" +
-                                  "WHERE (AllocateName LIKE '%" + userName + "%') AND Status IN (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID IN (4, 5))";
+                com.CommandText = "SELECT DATEDIFF(DAY,Start_Date, GETDATE()) AS Date_Diff,* FROM [UpdatedGVTool].[dbo].[NotValuedSection78] N " +
+                                  "WHERE (AllocateName LIKE '%" + userName + "%') AND Status IN (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID IN (5, 4))" +
+                                  "Order By N.Start_Date asc";
 
                 dr = com.ExecuteReader();
                 while (dr.Read())
@@ -278,7 +281,9 @@ namespace GeneralValuationSubs.Controllers
                         Dept_Dir = dr["Dept_Dir"].ToString(),
                         Snr_Manager = dr["Snr_Manager"].ToString(),
                         Area_Manager = dr["Area_Manager"].ToString(),
-                        Candidate_DC = dr["Candidate_DC"].ToString()
+                        Candidate_DC = dr["Candidate_DC"].ToString(),
+                        Start_Date = (DateTime)dr["Start_Date"],
+                        DateDiff = (int)dr["Date_Diff"]
                         //Date = (DateTime)dr["Date"],
 
                     });
@@ -326,103 +331,10 @@ namespace GeneralValuationSubs.Controllers
             return PartialView("PropPerUser", new { userName = userName });//drafts
         }
 
-        public IActionResult KillTask(string? DraftId, string? approverComment, string? approval, string PropertyDescription, string? MarketValue, string? CATDescription, string? Comment, string? CategoryComment, string? PremiseId, string? userName)
-        {
-            var userID = TempData["currentUser"];
-            TempData.Keep("currentUser");
-
-            var userSector = TempData["currentUserSector"];
-            TempData.Keep("currentUserSector");
-
-            var currentUserSurname = TempData["currentUserSurname"];
-            TempData.Keep("currentUserSurname");
-            var currentUserFirstname = TempData["currentUserFirstname"];
-            TempData.Keep("currentUserFirstname");
-
-            TempData["PropertyDescription"] = PropertyDescription;
-
-            if (draftHistories.Count > 0)
-            {
-                draftHistories.Clear();
-            }
-            try
-            {
-                con.Open();
-                com.Connection = con;
-                com.CommandText = "INSERT INTO [UpdatedGVTool].[dbo].[DraftHistorySection78] ([UserName],[UserID],[PropertyDescription]," +
-                                  "[MarketValue],[CATDescription],[Comment],[UserActivity],[Status],[approverComment],[ActivityDate], [PremiseId], [Sector]) " +
-                                  "VALUES('" + currentUserFirstname + ' ' + currentUserSurname + "', '" + userID + "', '" + PropertyDescription + "', '" + MarketValue + "'," +
-                                  "'" + CATDescription + "','" + Comment + "','Approved Values', (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 3),'" + Comment + "', getdate(), '" + PremiseId + "', '" + userSector + "')";
-                dr = com.ExecuteReader();
-                while (dr.Read())
-                {
-                    draftHistories.Add(new DraftHistory
-                    {
-                        //DraftId = (Int64)dr["DraftId"],
-                        //RevisedMarketValue = dr["RevisedMarketValue"].ToString(),
-                        //RevisedCategory = dr["RevisedCategory"].ToString(),
-                        //CommentMarketValue = dr["CommentMarketValue"].ToString(),
-                        //CommentCategory = dr["CommentCategory"].ToString(),
-                        //Status = dr["Status"].ToString(),
-                    });
-                }
-                con.Close();
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            if (drafts.Count > 0)
-            {
-                drafts.Clear();
-            }
-            try
-            {
-                con.Open();
-                com.Connection = con;
-                com.CommandText = "UPDATE [UpdatedGVTool].[dbo].[NotValuedSection78]" +
-                                  "SET [Status] = (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 3), [approverComment] = '" + Comment + "', [End_Date] = GETDATE() , [ApproverName] = '" + currentUserFirstname + ' ' + currentUserSurname + "'" +
-                                  "WHERE DraftId = '" + DraftId + "'";
-
-                dr = com.ExecuteReader();
-                while (dr.Read())
-                {
-                    drafts.Add(new Draft
-                    {
-                        //DraftId = (Int64)dr["DraftId"],
-                        //PremiseId = dr["PremiseId"].ToString(),
-                        //PropertyDescription = dr["PropertyDescription"].ToString(),
-                        //TownshipDescription = dr["TownshipDescription"].ToString(),
-                        //MarketValue = dr["MarketValue"].ToString(),
-                        //MarketCategory = dr["MarketCategory"].ToString(),
-                        //RevisedMarketValue = dr["RevisedMarketValue"].ToString(),
-                        //RevisedCategory = dr["RevisedCategory"].ToString(),
-                        //CommentMarketValue = dr["CommentMarketValue"].ToString(),
-                        //CommentCategory = dr["CommentCategory"].ToString(),
-                        //FlagForDelete = (bool)dr["FlagForDelete"],
-                        //AssignedValuer = dr["AssignedValuer"].ToString(),
-                        //BulkUpload = dr["BulkUpload"].ToString(),
-                        //Status = dr["Status"].ToString(),
-                        //Date = (DateTime)dr["Date"], 
-                    });
-                }
-                con.Close();
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            TempData["DraftApprovalSuccess"] = "Task is successfully approved.";
-
-            return RedirectToAction("PropPerUser", new { userName = userName });
-        }
+        
 
         [HttpPost]
-        public async Task<IActionResult> UpdateRevisedValue(string? QueryId, string? PremiseId, string? PropertyDescription, string? MarketValue, string? MarketValue1, string? MarketValue2, string? MarketValue3, string? CATDescription, string? CATDescription1, string? CATDescription2, string? CATDescription3, string? Extent1, string? Extent2, string? Extent3, string? Comment, string? WEF_DATE, string? userName, List<IFormFile> files)
+        public async Task<IActionResult> UpdateRevisedValue(string? QueryId, string? PremiseId, string? PropertyDescription, string? MarketValue, string? MarketValue1, string? MarketValue2, string? MarketValue3, string? CATDescription, string? CATDescription1, string? CATDescription2, string? CATDescription3, string? Extent, string? Extent1, string? Extent2, string? Extent3, string? Comment, string? WEF_DATE, string? userName, List<IFormFile> files)
         {
             var userID = TempData["currentUser"];
             TempData.Keep("currentUser");
@@ -512,13 +424,13 @@ namespace GeneralValuationSubs.Controllers
                 drafts.Clear();
             }
             try
-            {
+            { 
                 con.Open();
                 com.Connection = con;
 
                 //string fileNameAttachValue = (files != null && files.FileName != null) ? Path.GetFileName(files.FileName) : null;
 
-                com.CommandText = "UPDATE [UpdatedGVTool].[dbo].[NotValuedSection78] SET [Market Value] = '" + MarketValue + "', " + " [Market Value1] = '" + MarketValue1 + "'," + " [Market Value2] = '" + MarketValue2 + "', [Market Value3] = '" + MarketValue3 + "', " + " [Unit Legal Area1] = '" + Extent1 + "'," + "[Unit Legal Area2] = '" + Extent2 + "', " + "[Unit Legal Area3] = '" + Extent3 + "', " + " [CAT Description] = '" + CATDescription + "', " + " [CAT Description1] = '" + CATDescription1 + "'," + " [CAT Description2] = '" + CATDescription2 + "', " + " [CAT Description3] = '" + CATDescription3 + "', Comment = '" + Comment + "', WEF_DATE = '" + WEF_DATE + "', Activity_Date = getdate(), " +
+                com.CommandText = "UPDATE [UpdatedGVTool].[dbo].[NotValuedSection78] SET [Market Value] = '" + MarketValue + "', " + " [Market Value1] = '" + MarketValue1 + "'," + " [Market Value2] = '" + MarketValue2 + "', [Market Value3] = '" + MarketValue3 + "', " + " [Unit Legal Area] = '" + Extent + "', [Unit Legal Area1] = '" + Extent1 + "'," + "[Unit Legal Area2] = '" + Extent2 + "', " + "[Unit Legal Area3] = '" + Extent3 + "', " + " [CAT Description] = '" + CATDescription + "', " + " [CAT Description1] = '" + CATDescription1 + "'," + " [CAT Description2] = '" + CATDescription2 + "', " + " [CAT Description3] = '" + CATDescription3 + "', Comment = '" + Comment + "', WEF_DATE = '" + WEF_DATE + "', Activity_Date = getdate(), " +
                                  "FileNameAttach = '" + save_files + "', Status = (SELECT Status_Description FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 2) WHERE QueryId = '" + QueryId + "'";
                 dr = com.ExecuteReader();
                 while (dr.Read())
@@ -585,8 +497,9 @@ namespace GeneralValuationSubs.Controllers
             {
                 con.Open();
                 com.Connection = con;
-                com.CommandText = "SELECT * FROM [UpdatedGVTool].[dbo].[NotValuedSection78] " +
-                                  "WHERE (Dept_Dir LIKE '%" + userName + "%' OR Snr_Manager LIKE '%" + userName + "%' OR Area_Manager LIKE '%" + userName + "%') AND Sector = '" + userSector + "' AND Status = (SELECT Status_Description FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 2)";
+                com.CommandText = "SELECT DATEDIFF(DAY,Start_Date, GETDATE()) AS Date_Diff ,* FROM [UpdatedGVTool].[dbo].[NotValuedSection78] N " +
+                                  "WHERE (N.Dept_Dir LIKE '%" + userName + "%' OR N.Snr_Manager LIKE '%" + userName + "%' OR N.Area_Manager LIKE '%" + userName + "%') AND N.Sector = '" + userSector + "' AND N.Status IN (SELECT Status_Description FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID IN(2,6)) " +
+                                  "Order By N.Start_Date ASC";
                 dr = com.ExecuteReader();
                 while (dr.Read())
                 {
@@ -626,7 +539,9 @@ namespace GeneralValuationSubs.Controllers
                         Candidate_DC = dr["Candidate_DC"].ToString(),
                         //BulkUpload = dr["BulkUpload"].ToString(),
                         Status = dr["Status"].ToString(),
-                        AllocatedName = dr["AllocateName"].ToString()
+                        AllocatedName = dr["AllocateName"].ToString(),
+                        Start_Date = (DateTime)dr["Start_Date"],
+                        DateDiff = (int)dr["Date_Diff"]
                         //Date = (DateTime)dr["Date"],
                     });
                 }
@@ -715,9 +630,9 @@ namespace GeneralValuationSubs.Controllers
             var userID = TempData["currentUser"];
             TempData.Keep("currentUser");
 
-            var currentUserSurname = TempData["currentUserSurname"];
+            var currentUserSurname = TempData["currentUserSurname"] as string;
             TempData.Keep("currentUserSurname");
-            var currentUserFirstname = TempData["currentUserFirstname"];
+            var currentUserFirstname = TempData["currentUserFirstname"] as string;
             TempData.Keep("currentUserFirstname");
 
             var userSector = TempData["currentUserSector"];
@@ -725,7 +640,13 @@ namespace GeneralValuationSubs.Controllers
 
             TempData["PropertyDescription"] = PropertyDescription;
 
-            if (approval == "Approved")
+			if (string.IsNullOrWhiteSpace(currentUserSurname) || string.IsNullOrWhiteSpace(currentUserFirstname))
+			{
+				TempData["RefreshMessage"] = $"User Surname or Firstname is missing or blank. Please refresh the page.";
+				return RedirectToAction("RefreshMessage");
+			}
+
+			if (approval == "Approved")
             {
                 if (draftHistories.Count > 0)
                 {
@@ -737,7 +658,7 @@ namespace GeneralValuationSubs.Controllers
                     com.Connection = con;
                     com.CommandText = "INSERT INTO [UpdatedGVTool].[dbo].[DraftHistorySection78] ([UserName],[UserID],[PropertyDescription]," +
                                    "[MarketValue],[MarketValue1],[MarketValue2],[MarketValue3],[CATDescription],[CATDescription1],[CATDescription2],[CATDescription3],[Comment],[UserActivity],[Status],[approverComment],[ActivityDate], [PremiseId], [Sector]) " +
-                             "VALUES('" + currentUserFirstname + ' ' + currentUserSurname + "', '" + userID + "', '" + PropertyDescription + "', '" + MarketValue + "','" + MarketValue1 + "', '" + MarketValue2 + "','" + MarketValue3 + "', " + " '" + CATDescription + "','" + CATDescription1 + "','" + CATDescription2 + "','" + CATDescription3 + "','" + Comment + "','Approved Values', " +
+                             "VALUES('" + currentUserFirstname + ' ' + currentUserSurname + "', '" + userID + "', '" + PropertyDescription.Replace("'", "''") + "', '" + MarketValue + "','" + MarketValue1 + "', '" + MarketValue2 + "','" + MarketValue3 + "', " + " '" + CATDescription + "','" + CATDescription1 + "','" + CATDescription2 + "','" + CATDescription3 + "','" + Comment + "','Approved Values', " +
                              "(SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 3),'" + approverComment + "', getdate(), '" + PremiseId + "', '" + userSector + "')";
                     dr = com.ExecuteReader();
                     while (dr.Read())
@@ -820,7 +741,7 @@ namespace GeneralValuationSubs.Controllers
                     com.Connection = con;
                     com.CommandText = "INSERT INTO [UpdatedGVTool].[dbo].[DraftHistorySection78] ([UserName],[UserID],[PropertyDescription]," +
                                      "[MarketValue],[MarketValue1],[MarketValue2],[MarketValue3],[CATDescription],[CATDescription1],[CATDescription2],[CATDescription3],[Comment],[UserActivity],[Status],[approverComment],[ActivityDate], [PremiseId], [Sector]) " +
-                                      "VALUES('" + currentUserFirstname + ' ' + currentUserSurname + "', '" + userID + "', '" + PropertyDescription + "', '" + MarketValue + "', '" + MarketValue1 + "','" + MarketValue2 + "','" + MarketValue3 + "'," + " '" + CATDescription + "','" + CATDescription1 + "','" + CATDescription2 + "','" + CATDescription3 + "', '" + Comment + "','Rejected Values', (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 4),'" + approverComment + "', getdate(), '" + PremiseId + "', '" + userSector + "')";
+                                      "VALUES('" + currentUserFirstname + ' ' + currentUserSurname + "', '" + userID + "', '" + PropertyDescription.Replace("'", "''") + "', '" + MarketValue + "', '" + MarketValue1 + "','" + MarketValue2 + "','" + MarketValue3 + "'," + " '" + CATDescription + "','" + CATDescription1 + "','" + CATDescription2 + "','" + CATDescription3 + "', '" + Comment + "','Rejected Values', (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 4),'" + approverComment + "', getdate(), '" + PremiseId + "', '" + userSector + "')";
 
                     dr = com.ExecuteReader();
                     while (dr.Read())
@@ -889,8 +810,90 @@ namespace GeneralValuationSubs.Controllers
                 TempData["DraftApprovalSuccess"] = "Task is successfully rejected.";
                 return RedirectToAction("DraftApprovalList");
             }
+			if (approval == "KillTask")
+			{
+				if (draftHistories.Count > 0)
+				{
+					draftHistories.Clear();
+				}
+				try
+				{
+					con.Open();
+					com.Connection = con;
+					com.CommandText = "INSERT INTO [UpdatedGVTool].[dbo].[DraftHistorySection78] ([UserName],[UserID],[PropertyDescription]," +
+									  "[MarketValue],[MarketValue1],[MarketValue2],[MarketValue3],[CATDescription],[CATDescription1],[CATDescription2],[CATDescription3],[Comment],[UserActivity],[Status],[approverComment],[ActivityDate], [PremiseId], [Sector]) " +
+									   "VALUES('" + currentUserFirstname + ' ' + currentUserSurname + "', '" + userID + "', '" + PropertyDescription.Replace("'", "''") + "', '" + MarketValue + "','" + MarketValue1 + "', '" + MarketValue2 + "','" + MarketValue3 + "', " + " '" + CATDescription + "','" + CATDescription1 + "','" + CATDescription2 + "','" + CATDescription3 + "','" + Comment + "','Killed Values', " +
+									  "(SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 7),'" + approverComment + "', getdate(), '" + PremiseId + "', '" + userSector + "')";
+					dr = com.ExecuteReader();
+					while (dr.Read())
+					{
+						draftHistories.Add(new DraftHistory
+						{
+							//DraftId = (Int64)dr["DraftId"],
+							//RevisedMarketValue = dr["RevisedMarketValue"].ToString(),
+							//RevisedCategory = dr["RevisedCategory"].ToString(),
+							//CommentMarketValue = dr["CommentMarketValue"].ToString(),
+							//CommentCategory = dr["CommentCategory"].ToString(),
+							//Status = dr["Status"].ToString(),
+						});
+					}
+					con.Close();
 
-            return View();
+				}
+				catch (Exception ex)
+				{
+					throw ex;
+				}
+
+				if (drafts.Count > 0)
+				{
+					drafts.Clear();
+				}
+				try
+				{
+					con.Open();
+					com.Connection = con;
+					com.CommandText = "UPDATE [UpdatedGVTool].[dbo].[NotValuedSection78]" +
+									  "SET [Status] = (SELECT [Status_Description] FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 7), [approverComment] = '" + approverComment + "', [End_Date] = GETDATE() , [ApproverName] = '" + currentUserFirstname + ' ' + currentUserSurname + "'" +
+									  "WHERE QueryId = '" + QueryId + "'";
+
+					dr = com.ExecuteReader();
+					while (dr.Read())
+					{
+						drafts.Add(new Draft
+						{
+							//DraftId = (Int64)dr["DraftId"],
+							//PremiseId = dr["PremiseId"].ToString(),
+							//PropertyDescription = dr["PropertyDescription"].ToString(),
+							//TownshipDescription = dr["TownshipDescription"].ToString(),
+							//MarketValue = dr["MarketValue"].ToString(),
+							//MarketCategory = dr["MarketCategory"].ToString(),
+							//RevisedMarketValue = dr["RevisedMarketValue"].ToString(),
+							//RevisedCategory = dr["RevisedCategory"].ToString(),
+							//CommentMarketValue = dr["CommentMarketValue"].ToString(),
+							//CommentCategory = dr["CommentCategory"].ToString(),
+							//FlagForDelete = (bool)dr["FlagForDelete"],
+							//AssignedValuer = dr["AssignedValuer"].ToString(),
+							//BulkUpload = dr["BulkUpload"].ToString(),
+							//Status = dr["Status"].ToString(),
+							//Date = (DateTime)dr["Date"],
+
+						});
+					}
+					con.Close();
+
+				}
+				catch (Exception ex)
+				{
+					throw ex;
+				}
+
+				TempData["DraftApprovalSuccess"] = "Task is successfully killed.";
+
+				return RedirectToAction("DraftApprovalList");
+			}
+
+			return View();
 
         }
 
@@ -1384,7 +1387,7 @@ namespace GeneralValuationSubs.Controllers
 
                             //Section 7
                             SignatureName = dr["Signature_Name"].ToString(),
-                            SignaturePicture = dr["Signature_Picture"].ToString(),
+                            SignaturePicture = dr["Signature_Picture"].ToString()
                         });
                     }
                     conQ.Close();
@@ -1583,7 +1586,7 @@ namespace GeneralValuationSubs.Controllers
                         //Section 7
                         TempData["SignatureName"] = @items.SignatureName;
                         TempData["SignaturePicture"] = @items.SignaturePicture;
-
+                      
                     }
                 }
                 catch (Exception ex)
@@ -1793,8 +1796,7 @@ namespace GeneralValuationSubs.Controllers
 
                             //Section 7
                             SignatureName = dr["Signature_Name"].ToString(),
-                            SignaturePicture = dr["Signature_Picture"].ToString(),
-
+                            SignaturePicture = dr["Signature_Picture"].ToString()
 
                         });
                     }
@@ -1971,8 +1973,6 @@ namespace GeneralValuationSubs.Controllers
                         //Section 7
                         TempData["SignatureName"] = @items.SignatureName;
                         TempData["SignaturePicture"] = @items.SignaturePicture;
-
-
                     }
                 }
                 catch (Exception ex)
@@ -2176,8 +2176,7 @@ namespace GeneralValuationSubs.Controllers
 
                             //Section 7
                             SignatureName = dr["Signature_Name"].ToString(),
-                            SignaturePicture = dr["Signature_Picture"].ToString(),
-
+                            SignaturePicture = dr["Signature_Picture"].ToString()
 
                         });
                     }
@@ -2350,8 +2349,6 @@ namespace GeneralValuationSubs.Controllers
                         //Section 7
                         TempData["SignatureName"] = @items.SignatureName;
                         TempData["SignaturePicture"] = @items.SignaturePicture;
-
-
                     }
                 }
                 catch (Exception ex)
@@ -2692,8 +2689,7 @@ namespace GeneralValuationSubs.Controllers
 
                             //Section 7
                             SignatureName = dr["Signature_Name"].ToString(),
-                            SignaturePicture = dr["Signature_Picture"].ToString(),
-
+                            SignaturePicture = dr["Signature_Picture"].ToString()
 
                         });
                     }
@@ -3003,7 +2999,6 @@ namespace GeneralValuationSubs.Controllers
                         //Section 7
                         TempData["SignatureName"] = @items.SignatureName;
                         TempData["SignaturePicture"] = @items.SignaturePicture;
-
                     }
                 }
                 catch (Exception ex)
@@ -3038,10 +3033,197 @@ namespace GeneralValuationSubs.Controllers
             return View();
         }
 
-        /*public IActionResult ValForm()
+		public IActionResult DownloadFiles(string PremiseID)
+		{
+			string folderPath = @"E:\\Draft_Section78\\" + PremiseID + "";
+			//string[] filePaths = Directory.GetFiles(folderPath);
+
+			if (!Directory.Exists(folderPath))
+			{
+				TempData["ErrorMessage"] = $"Town Name Description for: {TempData["TownshipDescription"]} and Premise Id: {PremiseID} evidence not uploaded";
+				return RedirectToAction("ShowError");
+			}
+
+			string[] filePaths = Directory.GetFiles(folderPath);
+
+			if (filePaths.Length == 0)
+			{
+				TempData["ErrorMessage"] = $"Town Name Description for: {TempData["TownshipDescription"]} and Premise Id: {PremiseID} evidence not uploaded";
+				return RedirectToAction("ShowError");
+			}
+
+			using (var memoryStream = new MemoryStream())
+			{
+				using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+				{
+					foreach (var filePath in filePaths)
+					{
+						string fileName = Path.GetFileName(filePath);
+						using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+						{
+							var entry = archive.CreateEntry(fileName);
+							using (var entryStream = entry.Open())
+							{
+								fileStream.CopyTo(entryStream);
+							}
+						}
+					}
+				}
+
+				//memoryStream.Position = 0;
+				byte[] combinedData = memoryStream.ToArray();
+
+				using (var finalMemoryStream = new MemoryStream())
+				{
+					//memoryStream.CopyTo(finalMemoryStream);
+					finalMemoryStream.Position = 0;
+
+					return File(combinedData, "application/zip", PremiseID + " Files.zip");
+				}
+			}
+		}
+		public async Task<IActionResult> KillTask(string? QueryId, string? PremiseId, string?
+		   PropertyDescription, string? MarketValue, string? MarketValue1, string? MarketValue2, string? MarketValue3,
+		   string? CATDescription, string? CATDescription1, string? CATDescription2, string? CATDescription3, string? Comment, string? WEF_DATE, string? userName, List<IFormFile> files)
+		{
+			var userID = TempData["currentUser"];
+			TempData.Keep("currentUser");
+
+			var currentUserSurname = TempData["currentUserSurname"];
+			TempData.Keep("currentUserSurname");
+			var currentUserFirstname = TempData["currentUserFirstname"];
+			TempData.Keep("currentUserFirstname");
+
+			var userSector = TempData["currentUserSector"];
+			TempData.Keep("currentUserSector");
+
+			TempData["CATDescription"] = CATDescription;
+			TempData["WEF_DATE"] = WEF_DATE;
+			TempData["PropertyDescription"] = PropertyDescription;
+
+			int count = 0;
+
+			string Premise_ID = PremiseId.ToString();
+			string uploadRoot = $"{_config["AppSettings:FileRooTPathSection78"]}";
+			string folder = uploadRoot + "\\" + Premise_ID;
+			// ******Check existance then create it.******
+			if (!Directory.Exists(folder))
+			{
+				Directory.CreateDirectory(folder);
+			}
+
+			string save_files = "";
+
+			string FileNameAttach = "";
+
+			List<string> Upload = new List<string>();
+			foreach (IFormFile file in files)
+			{
+				count++;
+
+				string fileName = Path.GetFileName(file.FileName);
+				string filePath = $"{folder}\\{Path.GetFileName(file.FileName)}";
+
+				switch (count)
+				{
+					case 1:
+						FileNameAttach += fileName;
+						break;
+					case 2:
+						FileNameAttach += "," + fileName;
+						break;
+					case 3:
+						FileNameAttach += "," + fileName;
+						break;
+					case 4:
+						FileNameAttach += "," + fileName;
+						break;
+					case 5:
+						FileNameAttach += "," + fileName;
+						break;
+					case 6:
+						FileNameAttach += "," + fileName;
+						break;
+					case 7:
+						FileNameAttach += "," + fileName;
+						break;
+					case 8:
+						FileNameAttach += "," + fileName;
+						break;
+					case 9:
+						FileNameAttach += "," + fileName;
+						break;
+					case 10:
+						FileNameAttach += "," + fileName;
+						break;
+				}
+				using (var stream = System.IO.File.Create(filePath))
+				{
+					file.CopyTo(stream);
+					Upload.Add(fileName);
+				}
+
+				save_files = FileNameAttach;
+			}
+
+			if (drafts.Count > 0)
+			{
+				drafts.Clear();
+			}
+			try
+			{
+				con.Open();
+				com.Connection = con;
+
+				//string fileNameAttachValue = (files != null && files.FileName != null) ? Path.GetFileName(files.FileName) : null;
+
+				com.CommandText = "UPDATE [UpdatedGVTool].[dbo].[NotValuedSection78] SET [Market Value] = '" + MarketValue + "', [Market Value1] = '" + MarketValue1 + "', [Market Value2] = '" + MarketValue2 + "', [Market Value3] = '" + MarketValue3 + "', [CAT Description] = '" + CATDescription + "', " + "[CAT Description1] = '" + CATDescription1 + "', [CAT Description2] = '" + CATDescription2 + "', [CAT Description3] = '" + CATDescription3 + "', Comment = '" + Comment + "', WEF_DATE = '" + WEF_DATE + "', Activity_Date = getdate(), " +
+								  "FileNameAttach = '" + save_files + "', Status = (SELECT Status_Description FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 6) WHERE QueryId = '" + QueryId + "'";
+
+				dr = com.ExecuteReader();
+				
+
+				con.Close();
+
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+
+			if (draftHistories.Count > 0)
+			{
+				draftHistories.Clear();
+			}
+			try
+			{
+				con.Open();
+				com.Connection = con;
+				com.CommandText = "INSERT INTO [UpdatedGVTool].[dbo].[DraftHistorySection78] ([UserName],[UserID],[PropertyDescription]," +
+								  "[MarketValue],[MarketValue1],[MarketValue2],[MarketValue3],[CATDescription],[CATDescription1],[CATDescription2],[CATDescription3],[Comment],[UserActivity],[Status],[PremiseId],[ActivityDate], [Sector]) " +
+								  "VALUES('" + currentUserFirstname + ' ' + currentUserSurname + "', '" + userID + "', '" + PropertyDescription + "', '" + MarketValue + "' ,'" + MarketValue1 + "', '" + MarketValue2 + "', '" + MarketValue3 + "', '" + CATDescription + "', '" + CATDescription1 + "', '" + CATDescription2 + "', '" + CATDescription3 + "','" + Comment + "','Kill Values', (SELECT Status_Description FROM [UpdatedGVTool].[dbo].[Status] WHERE Status_ID = 6),'" + PremiseId + "', getdate(), '" + userSector + "')";
+
+				dr = com.ExecuteReader();
+				
+				con.Close();
+
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+
+			return RedirectToAction("PropPerUser", new { userName = userName });
+		}
+		public IActionResult ShowError()
+		{
+			return View();
+		}
+
+		/*public IActionResult ValForm()
         {
             return View();
         }*/
-    }
+	}
 }
 

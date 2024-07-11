@@ -26,6 +26,7 @@
         public string? Property_Description { get; set; }
 
         public string? Comment { get; set; }
+        public string? Indicator { get; set; }
 
     }
 }

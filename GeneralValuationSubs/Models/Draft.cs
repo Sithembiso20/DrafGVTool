@@ -31,6 +31,9 @@ public partial class Draft
     public string? OldCATDescription3 { get; set; }
     public string? ValuationType { get; set; } 
     public string? ValuationTypeDescription { get; set; }
+    public string? Unit_Type { get; set; }
+    public int Number_Of_Approved { get; set; }
+    public string? Sector { get; set; }
 
     public DateTime? WEF_DATE { get; set; }
 
@@ -79,6 +82,9 @@ public partial class Draft
 
     public DateTime Start_Date { get; set; }
     public DateTime End_Date { get; set; }
+
+    public int? DateDiff { get; set; } 
+
     public string? AllocatedName { get; set; } 
 
     public string? SchemeName { get; set; }

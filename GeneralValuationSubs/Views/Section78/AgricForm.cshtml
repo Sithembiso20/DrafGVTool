@@ -300,6 +300,8 @@
     //Section 7
     var SignatureName = TempData["SignatureName"];
     var SignaturePicture = TempData["SignaturePicture"];
+    var ApproverComment = TempData["ApproverComment"];
+    TempData.Keep("ApproverComment");
 
     //Valuation
     var currentUserSurname = TempData["currentUserSurname"];
@@ -319,6 +321,7 @@
     var Area_Manager = TempData["Area_Manager"];
     var Candidate_DC = TempData["Candidate_DC"];
     var Status = TempData["Status"];
+    TempData.Keep("Status");
 
 }
     <style>
@@ -424,6 +427,8 @@
     <a class="tablinks btn" onclick="showEvidence()" id="all-areas" style="text-decoration: none; background-color: #E6B000; margin-left: 50px">Evidence</a>
     <a class="tablinks btn" onclick="showValution()" id="all-areas" style="text-decoration: none; background-color: #E6B000; margin-left: 100px">Valuation</a>
 </div>
+
+<form asp-controller="Section78" asp-action="UpdateRevisedValue" method="POST" enctype="multipart/form-data" >
 
 <h4 style="justify-content: center; display:flex;  margin-top: 20px;">AGRICULTURAL FORM</h4>
 
@@ -1613,11 +1618,11 @@
                                         <div class="row my-3">
                                             <div class="col-md-6 form-group">
                                                 <label>Proposed Extent</label>
-                                                <input class="form-control" Value="@item.Extent" disabled />
+                                                    <input class="form-control" Value="@NewExtent" disabled />
                                             </div>
                                             <div class="col-md-6 form-group mt-3 mt-md-0">
                                                 <label for="Extent">Extent</label>
-                                                <input class="form-control" id="Extent" name="Extent1" value="" required />
+                                                <input class="form-control" id="Extent" name="Extent" value="" required />
                                             </div>
                                             @*<div class="col-md-6 form-group">
                                 <input class="form-control" id="MarketValue" name="MarketValue" Value="@item.MarketValue" disabled/>
@@ -1644,7 +1649,7 @@
                                         <div class="row my-3">
                                             <div class="col-md-6 form-group">
                                                 <label>Proposed Category</label>
-                                                <input class="form-control" disabled value="@Old_Category" />
+                                                    <input class="form-control" disabled value="@NewCategory" />
                                             </div>
                                             <div class="col-md-6 form-group">
                                                 <label for="RevisedCategory">Category</label>
@@ -1957,11 +1962,11 @@
                             <div class="text-center">
                                 <button type="submit" class="btn" style="background-color:#006570;">Update</button>
 
-                                @*<button type="submit" asp-controller="Section78" asp-action="KillTask" asp-route-userName="@currentUserFirstname @currentUserSurname"
+                                <button type="submit" asp-controller="Section78" asp-action="KillTask" asp-route-userName="@currentUserFirstname @currentUserSurname"
                                 class="btn" style="background-color: #4CAF50;"
                                 onclick="return confirm('Are you sure you want to kill the task?');">
                                 Kill Task
-                                </button>*@
+                                </button>
 
                                 <a type="button" class="btn btn-secondary"
                                    asp-controller="Section78" asp-action="PropPerUser" asp-route-userName="@currentUserFirstname @currentUserSurname"
@@ -2014,3 +2019,4 @@
         ctx.fillText("",10,50);
     </script>
 </div>
+</form>

@@ -8,9 +8,6 @@
     @*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GeneralValuationSubs.styles.css" asp-append-version="true" />*@
 
-     <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
   <!-- Vendor CSS Files -->
   <link href="~/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
   <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -23,6 +20,10 @@
   <link href="~/assets/css/style.css" rel="stylesheet">
   <link href="~/assets/img/COJ_Logo.png" rel="icon">
   <link href="~/assets/img/COJ_Logo.png" rel="apple-touch-icon">
+
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
 
     <!-- Add Kendo UI styles -->
     <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2023.2.408/styles/kendo.common.min.css">
@@ -217,6 +218,73 @@
                             }
                         }
 
+                        @if (@role != null)
+                        {
+                            @if (@role.ToString() == "SENIOR MANAGER" || @role.ToString() == "AREA MANAGER" || @role.ToString() == "DEPUTY DIRECTOR" || @role.ToString() == "VALUER" || @role.ToString() == "REVIEWER" || @role.ToString() == "REVISER")
+                            {
+                                <li class="dropdown">
+                                    <a href="#"><span class=" text-dark">Stats</span> <i class="bi bi-chevron-down"></i></a>
+                                    <ul>
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "SENIOR MANAGER" || @role.ToString() == "AREA MANAGER" || @role.ToString() == "DEPUTY DIRECTOR" || @role.ToString() == "VALUER" || @role.ToString() == "REVIEWER" || @role.ToString() == "REVISER")
+                                            {
+                                                <li class="dropdown">
+                                                    <a href="#"><span class="text-dark">Nulls and OCs</span> <i class="bi bi-chevron-down"></i></a>
+                                                    <ul class="dropdown-menu">
+                                                        @if (role != null && (role.ToString() == "SENIOR MANAGER" || role.ToString() == "AREA MANAGER" || role.ToString() == "DEPUTY DIRECTOR" || role.ToString() == "VALUER" || role.ToString() == "REVIEWER" || role.ToString() == "REVISER"))
+                                                        {
+                                                            <li><a asp-controller="Home" asp-action="Stats" class="text-dark">Nulls and OCs Graph</a></li>
+                                                            <li><a asp-controller="Home" asp-action="Details" class="text-dark">Nulls and OCs Table</a></li>
+
+                                                        }
+                                                    </ul>
+                                                </li>
+
+
+                                            }
+                                        }
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "SENIOR MANAGER" || @role.ToString() == "AREA MANAGER" || @role.ToString() == "DEPUTY DIRECTOR" || @role.ToString() == "VALUER" || @role.ToString() == "REVIEWER" || @role.ToString() == "REVISER")
+                                            {
+                                                <li class="dropdown">
+                                                    <a href="#"><span class="text-dark">Section 78</span> <i class="bi bi-chevron-down"></i></a>
+                                                    <ul class="dropdown-menu">
+                                                        @if (role != null && (role.ToString() == "SENIOR MANAGER" || role.ToString() == "AREA MANAGER" || role.ToString() == "DEPUTY DIRECTOR" || role.ToString() == "VALUER" || role.ToString() == "REVIEWER" || role.ToString() == "REVISER"))
+                                                        {
+                                                            <li><a asp-controller="Home" asp-action="Stats78" class="text-dark">Section 78 Graph</a></li>
+                                                            <li><a asp-controller="Home" asp-action="Details78" class="text-dark">Section 78 Table</a></li>
+                                                        }
+                                                    </ul>
+                                                </li>
+
+                                            }
+                                        }
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "SENIOR MANAGER" || @role.ToString() == "AREA MANAGER" || @role.ToString() == "DEPUTY DIRECTOR" || @role.ToString() == "VALUER" || @role.ToString() == "REVIEWER" || @role.ToString() == "REVISER")
+                                            {
+                                                <li class="dropdown">
+                                                    <a href="#"><span class="text-dark">Nulls & OCs & Sec 78 Table</span> <i class="bi bi-chevron-down"></i></a>
+                                                    <ul class="dropdown-menu">
+                                                        @if (role != null && (role.ToString() == "SENIOR MANAGER" || role.ToString() == "AREA MANAGER" || role.ToString() == "DEPUTY DIRECTOR" || role.ToString() == "VALUER" || role.ToString() == "REVIEWER" || role.ToString() == "REVISER"))
+                                                        {
+                                                            <li><a asp-controller="Home" asp-action="CombinedDetails" class="text-dark">Combined Table</a></li>
+
+                                                        }
+                                                    </ul>
+                                                </li>
+
+                                            }
+                                        }
+
+                                    </ul>
+                                </li>
+                            }
+
+                        }
+
                         &nbsp;
                         &nbsp;
                         
@@ -302,6 +370,38 @@
                                             {
                                                 <li class="nav-item">
                                                     <a asp-controller="Home" asp-action="ApprovalListGV18PV" class=" text-dark">GV18 PV Valuation Board Appeal Approval</a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </li> 
+                                
+                                <li class="dropdown"><a href="#"><span class=" text-dark">Approved</span> <i class="bi bi-chevron-down"></i></a>
+                                    <ul>
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "VALUATION ADMIN" || @role.ToString() == "VALUATION ADMIN SUPERVISER")
+                                            {
+                                                <li class="nav-item">
+                                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GV13ValuationApproved">GV13 Approved</a>
+                                                </li>
+                                            }
+                                        }
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "VALUATION ADMIN" || @role.ToString() == "VALUATION ADMIN SUPERVISER")
+                                            {
+                                                <li class="nav-item">
+                                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GV18ValuationApproved">GV18 RV Approved</a>
+                                                </li>
+                                            }
+                                        }
+                                        @if (@role != null)
+                                        {
+                                            @if (@role.ToString() == "VALUATION ADMIN" || @role.ToString() == "VALUATION ADMIN SUPERVISER")
+                                            {
+                                                <li class="nav-item">
+                                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="GV18ValuationPVApproved">GV18 PV Approved</a>
                                                 </li>
                                             }
                                         }
@@ -393,6 +493,7 @@
   <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="~/assets/vendor/waypoints/noframework.waypoints.js"></script>
   <script src="~/assets/vendor/php-email-form/validate.js"></script>
+
 
   <!-- Template Main JS File -->
  

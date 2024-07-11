@@ -809,7 +809,8 @@ namespace GeneralValuationSubs.Models
         public string? Multi_MarketValue_MVD3 { get; set; }
         public string? Multi_Category_MVD3 { get; set; }
         public string? Multi_Extent_MVD3 { get; set; }
-        public string? Activity_DateTime { get; set; }
-
+        public string? Activity_DateTime { get; set; } 
+        public string? ApproverComment { get; set; }
+        public string? Status { get; set; } 
     }
 }

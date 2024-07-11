@@ -77,7 +77,15 @@
 
             <th>
                 Status
-            </th>    
+            </th>
+
+            <th>
+                Start Date
+            </th>
+
+            <th>
+                Days to Complete Task
+            </th>
             
             <th>
                 Done By
@@ -129,6 +137,33 @@
                     <td>
                           @item.Status
                     </td>
+
+                    <td>
+                        @(((DateTime)item.Start_Date).ToString("yyyy-MM-dd"))
+                    </td>
+
+                    <td>
+                        @if (@item.DateDiff >= 0 && @item.DateDiff <= 10)
+                        {
+                            <span style="color: green;">
+                                @item.DateDiff
+                            </span>
+                        }
+                        else if (@item.DateDiff >= 11 && @item.DateDiff <= 20)
+                        {
+                            <span style="color: orange;">
+                                @item.DateDiff
+                            </span>
+                        }
+                        else if (@item.DateDiff >= 21)
+                        {
+                            <span style="color: red;">
+                                @item.DateDiff
+                            </span>
+                        }
+
+                    </td>
+
                     <td>
                           @item.AllocatedName
                     </td>                        
@@ -180,7 +215,7 @@
         }
     });
       });
-    </script>
+    </script>   
 
 </body>
 

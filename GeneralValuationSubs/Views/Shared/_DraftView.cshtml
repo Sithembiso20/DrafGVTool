@@ -62,7 +62,14 @@
             </th>
             <th>
                 Status
-            </th>    
+            </th>
+            <th>
+                Start Date
+            </th>
+
+            <th>
+                Days to Complete Task
+            </th>
 
             <th>
                 -------
@@ -95,11 +102,34 @@
                     </td>                    
                     <td>
                             @item.Status
-                    </td>                    
+                    </td>      
+                    <td>
+                        @(((DateTime)item.Start_Date).ToString("yyyy-MM-dd"))
+                    </td>
+
+                    <td>
+                        @if (@item.DateDiff >= 0 && @item.DateDiff <= 10)
+                        {
+                            <span style="color: green;">
+                                @item.DateDiff
+                            </span>
+                        }
+                        else if (@item.DateDiff >= 11 && @item.DateDiff <= 20)
+                        {
+                            <span style="color: orange;">
+                                @item.DateDiff
+                            </span>
+                        }
+                        else if (@item.DateDiff >= 21)
+                        {
+                            <span style="color: red;">
+                                @item.DateDiff
+                            </span>
+                        }
+                    </td>
                     <td>
                         <a class="btn" style="background-color: #E6B000;" asp-controller="Home" asp-action="ViewProperty" asp-route-id="@item.DraftId">View</a>
                     </td>
-
                     
 
                 </tr>
