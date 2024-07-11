@@ -99,6 +99,7 @@ namespace GeneralValuationSubs.Controllers
                         TempData["currentUserEmail"] = admin.EmailAddress;
                         TempData["currentUserSurname"] = admin.Surname;
                         TempData["currentUserFirstname"] = admin.FirstName;
+
                         TempData["currentUserPhoneNo"] = admin.PhoneNo;
                     }
                 }
