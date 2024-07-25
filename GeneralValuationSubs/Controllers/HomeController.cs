@@ -2305,10 +2305,16 @@ namespace GeneralValuationSubs.Controllers
             var userID = TempData["currentUser"];
             TempData.Keep("currentUser");
 
-            var currentUserSurname = TempData["currentUserSurname"];
+            var currentUserSurname = TempData["currentUserSurname"] as string;
             TempData.Keep("currentUserSurname");
-            var currentUserFirstname = TempData["currentUserFirstname"];
-            TempData.Keep("currentUserFirstname");  
+            var currentUserFirstname = TempData["currentUserFirstname"] as string;
+            TempData.Keep("currentUserFirstname");
+
+            if (string.IsNullOrWhiteSpace(currentUserSurname) || string.IsNullOrWhiteSpace(currentUserFirstname))
+            {
+                TempData["RefreshMessage"] = $"User Surname or Firstname is missing or blank. Please refresh the page.";
+                return RedirectToAction("RefreshMessage");
+            }
 
             if (GV13s.Count > 0) 
             {
@@ -2487,10 +2493,16 @@ namespace GeneralValuationSubs.Controllers
             var userID = TempData["currentUser"];
             TempData.Keep("currentUser");
 
-            var currentUserSurname = TempData["currentUserSurname"];
+            var currentUserSurname = TempData["currentUserSurname"] as string;
             TempData.Keep("currentUserSurname");
-            var currentUserFirstname = TempData["currentUserFirstname"];
+            var currentUserFirstname = TempData["currentUserFirstname"] as string;
             TempData.Keep("currentUserFirstname");
+
+            if (string.IsNullOrWhiteSpace(currentUserSurname) || string.IsNullOrWhiteSpace(currentUserFirstname))
+            {
+                TempData["RefreshMessage"] = $"User Surname or Firstname is missing or blank. Please refresh the page.";
+                return RedirectToAction("RefreshMessage");
+            }
 
             TempData["PropertyDescription"] = Property_Description;
 
@@ -2896,11 +2908,17 @@ namespace GeneralValuationSubs.Controllers
             var userID = TempData["currentUser"];                                                                                                                    
             TempData.Keep("currentUser");                                                                                                                            
                                                                                                                                                                      
-            var currentUserSurname = TempData["currentUserSurname"];                                                                                                 
+            var currentUserSurname = TempData["currentUserSurname"] as string;                                                                                                 
             TempData.Keep("currentUserSurname");                                                                                                                     
-            var currentUserFirstname = TempData["currentUserFirstname"];                                                                                             
-            TempData.Keep("currentUserFirstname");                                                                                                                
-                                                                                                                                                                  
+            var currentUserFirstname = TempData["currentUserFirstname"] as string;                                                                                             
+            TempData.Keep("currentUserFirstname");
+
+            if (string.IsNullOrWhiteSpace(currentUserSurname) || string.IsNullOrWhiteSpace(currentUserFirstname))
+            {
+                TempData["RefreshMessage"] = $"User Surname or Firstname is missing or blank. Please refresh the page.";
+                return RedirectToAction("RefreshMessage");
+            }
+
             if (GV18s.Count > 0)                                                                                                                                  
             {
                 GV18s.Clear();
@@ -2967,10 +2985,17 @@ namespace GeneralValuationSubs.Controllers
             var userID = TempData["currentUser"];
             TempData.Keep("currentUser"); 
 
-            var currentUserSurname = TempData["currentUserSurname"];
+            var currentUserSurname = TempData["currentUserSurname"] as string;
             TempData.Keep("currentUserSurname");
-            var currentUserFirstname = TempData["currentUserFirstname"];
+            var currentUserFirstname = TempData["currentUserFirstname"] as string;
             TempData.Keep("currentUserFirstname");
+
+
+            if (string.IsNullOrWhiteSpace(currentUserSurname) || string.IsNullOrWhiteSpace(currentUserFirstname))
+            {
+                TempData["RefreshMessage"] = $"User Surname or Firstname is missing or blank. Please refresh the page.";
+                return RedirectToAction("RefreshMessage");
+            }
 
             if (GV18s.Count > 0)
             {
@@ -3280,10 +3305,16 @@ namespace GeneralValuationSubs.Controllers
             var userID = TempData["currentUser"]; 
             TempData.Keep("currentUser"); 
 
-            var currentUserSurname = TempData["currentUserSurname"];
+            var currentUserSurname = TempData["currentUserSurname"] as string;
             TempData.Keep("currentUserSurname");
-            var currentUserFirstname = TempData["currentUserFirstname"];
+            var currentUserFirstname = TempData["currentUserFirstname"] as string;
             TempData.Keep("currentUserFirstname");
+
+            if (string.IsNullOrWhiteSpace(currentUserSurname) || string.IsNullOrWhiteSpace(currentUserFirstname))
+            {
+                TempData["RefreshMessage"] = $"User Surname or Firstname is missing or blank. Please refresh the page.";
+                return RedirectToAction("RefreshMessage");
+            }
 
             TempData["PropertyDescription"] = Property_Description;
 
@@ -3422,11 +3453,17 @@ namespace GeneralValuationSubs.Controllers
             var userID = TempData["currentUser"];
             TempData.Keep("currentUser");
 
-            var currentUserSurname = TempData["currentUserSurname"];
+            var currentUserSurname = TempData["currentUserSurname"] as string;
             TempData.Keep("currentUserSurname");
-            var currentUserFirstname = TempData["currentUserFirstname"];
+            var currentUserFirstname = TempData["currentUserFirstname"] as string; 
             TempData.Keep("currentUserFirstname");
-              
+
+            if (string.IsNullOrWhiteSpace(currentUserSurname) || string.IsNullOrWhiteSpace(currentUserFirstname))
+            {
+                TempData["RefreshMessage"] = $"User Surname or Firstname is missing or blank. Please refresh the page.";
+                return RedirectToAction("RefreshMessage");
+            }
+
             TempData["PropertyDescription"] = Property_Description;
 
             if (approval == "Approved")
